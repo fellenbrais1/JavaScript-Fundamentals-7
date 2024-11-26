@@ -22,7 +22,6 @@ function rollDice() {
 }
 
 function changeDice(diceRoll) {
-  let newScore;
   switch (diceRoll) {
     case 1:
       diceImage.src = 'dice-1.png';
