@@ -192,3 +192,53 @@ main {
   font-weight: 700;
   color: #c7365f;
 }
+
+.scrolling-text {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  /* text-align: left; */
+}
+
+.scroll-one {
+  width: 100%;
+  position: absolute;
+  top: 4rem;
+  text-justify: center;
+}
+
+.scroll-two {
+  width: 100%;
+  position: absolute;
+  bottom: 4rem;
+}
+
+.banner1,
+.banner2 {
+  display: block;
+  font-weight: bolder;
+  font-size: 80px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #c7365f;
+}
+
+.banner1 {
+  top: 6rem;
+  /* text-justify: center; */
+  text-align: center;
+  /* transform: translateX(25%); */
+}
+
+.banner2 {
+  bottom: 6rem;
+  animation: scroll-text 30s ease-in-out infinite;
+}
+
+@keyframes scroll-text {
+  0% {
+    transform: translateX(300%);
+  }
+  100% {
+    transform: translateX(-300%);
+  }
+}

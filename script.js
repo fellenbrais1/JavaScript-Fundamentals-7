@@ -44,6 +44,7 @@ function newButtonSetUp() {
 // Runs automatically at the beginning of a game
 function gameStart() {
   const coinToss = Math.trunc(Math.random(0, 1) * 2) + 1;
+  coinFlip();
   let tossResult;
   displayMessage(`Tossing a coin...`, 0);
   if (coinToss === 1) {
@@ -54,6 +55,7 @@ function gameStart() {
       addListeners();
       toggleHover();
     }, 3500);
+    displayMessage(`Player 1's turn!`, 4000);
   }
   if (coinToss === 2) {
     tossResult = 'tails';
@@ -142,6 +144,7 @@ function changeActivePlayer() {
 // Called by clicking the 'bank' button
 function buttonHold() {
   displayMessage(`You bank your score!`, 0);
+  bank();
   let newScore =
     Number(activeTotalScore.textContent) +
     Number(activeCurrentScore.textContent);
@@ -157,6 +160,7 @@ function buttonHold() {
 // Called by clicking the 'roll dice' button
 function rollDice() {
   const diceRoll = Math.trunc(Math.random(0, 1) * 6) + 1;
+  dice();
   changeDice(diceRoll);
 }
 
@@ -165,42 +169,47 @@ function rollDice() {
 function changeDice(diceRoll) {
   switch (diceRoll) {
     case 1:
-      diceImage.src = 'dice-1.png';
+      diceImage.src = 'img/dice-1.png';
       if (chain === 0) {
         displayMessage(`Bad luck!`, 0);
+        badLuck();
       } else {
         displayMessage(`Greedy Pig!`, 0);
+        oink();
+        setTimeout(() => {
+          diceImage.src = 'img/pig.png';
+        }, 1000);
       }
       activeCurrentScore.textContent = 0;
       chain = 0;
       changeActivePlayer();
       break;
     case 2:
-      diceImage.src = 'dice-2.png';
+      diceImage.src = 'img/dice-2.png';
       displayMessage(`Rolled a 2!`, 0);
       chain++;
       calcScore(diceRoll);
       break;
     case 3:
-      diceImage.src = 'dice-3.png';
+      diceImage.src = 'img/dice-3.png';
       displayMessage(`Rolled a 3!`, 0);
       chain++;
       calcScore(diceRoll);
       break;
     case 4:
-      diceImage.src = 'dice-4.png';
+      diceImage.src = 'img/dice-4.png';
       displayMessage(`Rolled a 4!`, 0);
       chain++;
       calcScore(diceRoll);
       break;
     case 5:
-      diceImage.src = 'dice-5.png';
+      diceImage.src = 'img/dice-5.png';
       displayMessage(`Rolled a 5!`, 0);
       chain++;
       calcScore(diceRoll);
       break;
     case 6:
-      diceImage.src = 'dice-6.png';
+      diceImage.src = 'img/dice-6.png';
       displayMessage(`Rolled a 6!`, 0);
       chain++;
       calcScore(diceRoll);
@@ -228,15 +237,48 @@ function checkWinner() {
       player = 'player 2';
     }
     displayMessage(
-      `${player} is the winner with a score of ${activeTotalScore.textContent}!`,
+      `${player} is the winner with ${activeTotalScore.textContent} points!`,
       1000
     );
-    displayMessage(`Congratulations!`, 3000);
+    setTimeout(() => {
+      win();
+    }, 2000);
+    displayMessage(`Congratulations ${player}!`, 3000);
     rollBtn.removeEventListener('click', rollDice);
     holdBtn.removeEventListener('click', buttonHold);
     return false;
   }
   return true;
+}
+
+function oink() {
+  const oinkSound = document.getElementById('oink');
+  oinkSound.play();
+}
+
+function bank() {
+  const bankSound = document.getElementById('bank');
+  bankSound.play();
+}
+
+function win() {
+  const winSound = document.getElementById('win');
+  winSound.play();
+}
+
+function dice() {
+  const diceSound = document.getElementById('dice');
+  diceSound.play();
+}
+
+function badLuck() {
+  const badLuckSound = document.getElementById('badluck');
+  badLuckSound.play();
+}
+
+function coinFlip() {
+  const coinFlipSound = document.getElementById('coinflip');
+  coinFlipSound.play();
 }
 
 // NOTES

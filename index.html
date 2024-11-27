@@ -8,7 +8,18 @@
     <title>Pig Game</title>
   </head>
   <body>
+    <div class="scrolling-text scroll-one">
+      <p class="banner1">🐖 PIG GAME 🐖</p>
+    </div>
     <main>
+      <audio
+        id="background"
+        src="sound/background.mp3"
+        type="mp3"
+        loop
+        autoplay
+      ></audio>
+
       <section class="player player--1 player--active">
         <h2 class="name" id="name--1">Player 1</h2>
         <p class="score" id="score--1">43</p>
@@ -26,12 +37,24 @@
         </div>
       </section>
 
-      <img src="dice-5.png" alt="Playing dice" class="dice" />
+      <img src="img/pig.png" alt="Playing dice" class="dice" />
+
+      <audio id="oink" src="sound/oink.mp3" type="mp3"></audio>
+      <audio id="bank" src="sound/bank.mp3" type="mp3"></audio>
+      <audio id="win" src="sound/win.mp3" type="mp3"></audio>
+      <audio id="dice" src="sound/dice.mp3" type="mp3"></audio>
+      <audio id="coinflip" src="sound/coinflip.mp3" type="mp3"></audio>
+      <audio id="badluck" src="sound/badluck.mp3" type="mp3"></audio>
+
       <p class="message"></p>
+
       <button class="btn btn--new">🔄 New game</button>
       <button class="btn btn--roll nohover">🎲 Roll dice</button>
       <button class="btn btn--hold nohover">📥 Bank</button>
     </main>
     <script src="script.js"></script>
+    <div class="scrolling-text scroll-two">
+      <p class="banner2">🐖 🐖 🐖 🐖 🐖 🐖 🐖 🐖 🐖 🐖 🐖 🐖</p>
+    </div>
   </body>
 </html>
