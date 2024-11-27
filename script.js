@@ -174,38 +174,23 @@ function rollDice() {
 // Changes the dice image and handle scores and rolls of 1
 // Called by rollDice()
 function changeDice(diceRoll) {
-  switch (diceRoll) {
-    case 1:
-      diceImage.src = 'img/dice-1.png';
-      if (chain === 0) {
-        displayMessage(`Bad luck!`, 0);
-        playSound('badluck');
-      } else {
-        displayMessage(`Greedy Pig!`, 0);
-        playSound('oink');
-        setTimeout(() => {
-          diceImage.src = 'img/pig.png';
-        }, 1000);
-      }
-      activeCurrentScore.textContent = 0;
-      chain = 0;
-      changeActivePlayer();
-      break;
-    case 2:
-      diceProcess(diceRoll);
-      break;
-    case 3:
-      diceProcess(diceRoll);
-      break;
-    case 4:
-      diceProcess(diceRoll);
-      break;
-    case 5:
-      diceProcess(diceRoll);
-      break;
-    case 6:
-      diceProcess(diceRoll);
-      break;
+  if (diceRoll === 1) {
+    diceImage.src = 'img/dice-1.png';
+    if (chain === 0) {
+      displayMessage(`Bad luck!`, 0);
+      playSound('badluck');
+    } else {
+      displayMessage(`Greedy Pig!`, 0);
+      playSound('oink');
+      setTimeout(() => {
+        diceImage.src = 'img/pig.png';
+      }, 500);
+    }
+    activeCurrentScore.textContent = 0;
+    chain = 0;
+    changeActivePlayer();
+  } else {
+    diceProcess(diceRoll);
   }
 }
 
@@ -261,3 +246,5 @@ function checkWinner() {
 // document.getElementById('score--1');
 
 // This is most useful when the website has to select and apply things to hundreds of different elements and time can be of the essence.
+
+// Remember to refactor code and that it is best to wrap repeated code into functions and then call them. Brevity is important, so instead of using a switch case to handle all possible dice rolls, we can simply test for a roll of 1, and then process all other rolls by calling the same function. We can use template literals in the arguments fed into and passed to functions to allow differences in values to be handled programmatically rather than specifically by us.
