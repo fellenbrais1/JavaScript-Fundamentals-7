@@ -44,7 +44,7 @@ function newButtonSetUp() {
 // Runs automatically at the beginning of a game
 function gameStart() {
   const coinToss = Math.trunc(Math.random(0, 1) * 2) + 1;
-  coinFlip();
+  playSound('coinflip');
   let tossResult;
   displayMessage(`Tossing a coin...`, 0);
   if (coinToss === 1) {
@@ -69,7 +69,7 @@ function gameStart() {
   }
 }
 
-// Add event listeners to the buttons when needed
+// Add event listeners to the 'roll dice' and 'bank' buttons
 // Called by gameStart()
 function addListeners() {
   rollBtn.addEventListener('click', rollDice);
@@ -115,6 +115,13 @@ function displayMessage(message, delay) {
   }, delay);
 }
 
+// Allows a relevant sound effect to be played based on the ID string passed in
+// Called by gameStart(), rollDice(), changeDice(), buttonHold(), and checkWinner()
+function playSound(soundId) {
+  const sound = document.getElementById(`${soundId}`);
+  sound.play();
+}
+
 // Changes which player is active under certain conditions
 // Called by gameStart(), changeDice(), and buttonHold()
 function changeActivePlayer() {
@@ -144,7 +151,7 @@ function changeActivePlayer() {
 // Called by clicking the 'bank' button
 function buttonHold() {
   displayMessage(`You bank your score!`, 0);
-  bank();
+  playSound('bank');
   let newScore =
     Number(activeTotalScore.textContent) +
     Number(activeCurrentScore.textContent);
@@ -160,7 +167,7 @@ function buttonHold() {
 // Called by clicking the 'roll dice' button
 function rollDice() {
   const diceRoll = Math.trunc(Math.random(0, 1) * 6) + 1;
-  dice();
+  playSound('dice');
   changeDice(diceRoll);
 }
 
@@ -172,10 +179,10 @@ function changeDice(diceRoll) {
       diceImage.src = 'img/dice-1.png';
       if (chain === 0) {
         displayMessage(`Bad luck!`, 0);
-        badLuck();
+        playSound('badluck');
       } else {
         displayMessage(`Greedy Pig!`, 0);
-        oink();
+        playSound('oink');
         setTimeout(() => {
           diceImage.src = 'img/pig.png';
         }, 1000);
@@ -185,36 +192,30 @@ function changeDice(diceRoll) {
       changeActivePlayer();
       break;
     case 2:
-      diceImage.src = 'img/dice-2.png';
-      displayMessage(`Rolled a 2!`, 0);
-      chain++;
-      calcScore(diceRoll);
+      diceProcess(diceRoll);
       break;
     case 3:
-      diceImage.src = 'img/dice-3.png';
-      displayMessage(`Rolled a 3!`, 0);
-      chain++;
-      calcScore(diceRoll);
+      diceProcess(diceRoll);
       break;
     case 4:
-      diceImage.src = 'img/dice-4.png';
-      displayMessage(`Rolled a 4!`, 0);
-      chain++;
-      calcScore(diceRoll);
+      diceProcess(diceRoll);
       break;
     case 5:
-      diceImage.src = 'img/dice-5.png';
-      displayMessage(`Rolled a 5!`, 0);
-      chain++;
-      calcScore(diceRoll);
+      diceProcess(diceRoll);
       break;
     case 6:
-      diceImage.src = 'img/dice-6.png';
-      displayMessage(`Rolled a 6!`, 0);
-      chain++;
-      calcScore(diceRoll);
+      diceProcess(diceRoll);
       break;
   }
+}
+
+// Processes the events of a dice roll
+// Called by changedDice()
+function diceProcess(diceRoll) {
+  diceImage.src = `img/dice-${diceRoll}.png`;
+  displayMessage(`Rolled a ${diceRoll}!`, 0);
+  chain++;
+  calcScore(diceRoll);
 }
 
 // Calculates the new current score based on the dice roll
@@ -241,7 +242,7 @@ function checkWinner() {
       1000
     );
     setTimeout(() => {
-      win();
+      playSound('win');
     }, 2000);
     displayMessage(`Congratulations ${player}!`, 3000);
     rollBtn.removeEventListener('click', rollDice);
@@ -249,36 +250,6 @@ function checkWinner() {
     return false;
   }
   return true;
-}
-
-function oink() {
-  const oinkSound = document.getElementById('oink');
-  oinkSound.play();
-}
-
-function bank() {
-  const bankSound = document.getElementById('bank');
-  bankSound.play();
-}
-
-function win() {
-  const winSound = document.getElementById('win');
-  winSound.play();
-}
-
-function dice() {
-  const diceSound = document.getElementById('dice');
-  diceSound.play();
-}
-
-function badLuck() {
-  const badLuckSound = document.getElementById('badluck');
-  badLuckSound.play();
-}
-
-function coinFlip() {
-  const coinFlipSound = document.getElementById('coinflip');
-  coinFlipSound.play();
 }
 
 // NOTES
