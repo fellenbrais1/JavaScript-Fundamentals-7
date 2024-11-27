@@ -1,26 +1,167 @@
+// INFO
+
+// The pig game needs players to roll dice and accumulate a score. The current score will go up as long as the roll is not a 1. In the case of a 1, the player loses all current points and the other player starts their turn. A player can bank their points when they want and this will add them to their real total score. The first player to accumulate 100 or more points is the winner.
+
 'use strict';
 
+// Defining useful constants
+const newBtn = document.querySelector('.btn--new');
+const rollBtn = document.querySelector('.btn--roll');
+const holdBtn = document.querySelector('.btn--hold');
 const diceImage = document.querySelector('.dice');
+const messageBox = document.querySelector('.message');
 const player1 = document.querySelector('.player--1');
 const player2 = document.querySelector('.player--2');
-const messageBox = document.querySelector('.message');
 
+// Defining other useful variables
 let activeTotalScore = document.querySelector('.player--active .score');
 let activeCurrentScore = document.querySelector(
   '.player--active .current-score'
 );
 let chain = 0;
+let isHoverEnabled = false;
 
+// Setting the initial display of the total score elements
 document.querySelector('#score--1').textContent = 0;
 document.querySelector('#score--2').textContent = 0;
+
+// Initializes the game and determines who starts first
+newButtonSetUp();
 gameStart();
 
+// Sets up the behaviour of the 'new game' button's outline on hover
+// Runs automatically at the beginning of a game
+function newButtonSetUp() {
+  newBtn.addEventListener('mouseover', () => {
+    newBtn.classList.add('hovered');
+  });
+  newBtn.addEventListener('mouseout', () => {
+    newBtn.classList.remove('hovered');
+  });
+}
+
+// Decides which player starts first by simulating a coin toss
+// Runs automatically at the beginning of a game
+function gameStart() {
+  const coinToss = Math.trunc(Math.random(0, 1) * 2) + 1;
+  let tossResult;
+  displayMessage(`Tossing a coin...`, 0);
+  if (coinToss === 1) {
+    tossResult = 'heads';
+    displayMessage(`The result was ${tossResult}!`, 2000);
+    displayMessage(`Player 1 goes first!`, 3000);
+    setTimeout(() => {
+      addListeners();
+      toggleHover();
+    }, 3500);
+  }
+  if (coinToss === 2) {
+    tossResult = 'tails';
+    displayMessage(`The result was ${tossResult}!`, 2000);
+    displayMessage(`Player 2 goes first!`, 3000);
+    setTimeout(() => {
+      changeActivePlayer();
+      addListeners();
+      toggleHover();
+    }, 3500);
+  }
+}
+
+// Add event listeners to the buttons when needed
+// Called by gameStart()
+function addListeners() {
+  rollBtn.addEventListener('click', rollDice);
+  holdBtn.addEventListener('click', buttonHold);
+  newBtn.addEventListener('click', () => {
+    location.reload();
+  });
+}
+
+// Toggles the hover state of the roll and bank buttons depending on the state of the game, i.e. disabled during turn changes
+// Called by gameStart(), changeActivePlayer()
+function toggleHover() {
+  if (!isHoverEnabled) {
+    rollBtn.classList.remove('nohover');
+    holdBtn.classList.remove('nohover');
+    rollBtn.addEventListener('mouseover', () => {
+      rollBtn.classList.add('hovered');
+    });
+    rollBtn.addEventListener('mouseout', () => {
+      rollBtn.classList.remove('hovered');
+    });
+    holdBtn.addEventListener('mouseover', () => {
+      holdBtn.classList.add('hovered');
+    });
+    holdBtn.addEventListener('mouseout', () => {
+      holdBtn.classList.remove('hovered');
+    });
+    isHoverEnabled = true;
+    return;
+  } else {
+    rollBtn.classList.add('nohover');
+    holdBtn.classList.add('nohover');
+    isHoverEnabled = false;
+    return;
+  }
+}
+
+// Displays messages with a delay to the 'message' element
+// Called by gameStart(), changeActivePlayer(), buttonHold(), changeDice(), and checkWinner()
+function displayMessage(message, delay) {
+  setTimeout(() => {
+    messageBox.textContent = message;
+  }, delay);
+}
+
+// Changes which player is active under certain conditions
+// Called by gameStart(), changeDice(), and buttonHold()
+function changeActivePlayer() {
+  toggleHover();
+  rollBtn.removeEventListener('click', rollDice);
+  holdBtn.removeEventListener('click', buttonHold);
+  if (player1.classList.contains('player--active')) {
+    displayMessage(`Player 2's turn!`, 1000);
+    player1.classList.remove('player--active');
+    player2.classList.add('player--active');
+  } else {
+    displayMessage(`Player 1's turn!`, 1000);
+    player2.classList.remove('player--active');
+    player1.classList.add('player--active');
+  }
+  activeTotalScore = document.querySelector('.player--active .score');
+  activeCurrentScore = document.querySelector('.player--active .current-score');
+  setTimeout(() => {
+    rollBtn.addEventListener('click', rollDice);
+    holdBtn.addEventListener('click', buttonHold);
+    toggleHover();
+    chain = 0;
+  }, `1500`);
+}
+
+// Banks the current score if any and allows player switching
+// Called by clicking the 'bank' button
+function buttonHold() {
+  displayMessage(`You bank your score!`, 0);
+  let newScore =
+    Number(activeTotalScore.textContent) +
+    Number(activeCurrentScore.textContent);
+  activeTotalScore.textContent = newScore;
+  activeCurrentScore.textContent = 0;
+  let moveOn = checkWinner();
+  if (moveOn) {
+    changeActivePlayer();
+  }
+}
+
+// Generate a randomised d6 roll
+// Called by clicking the 'roll dice' button
 function rollDice() {
   const diceRoll = Math.trunc(Math.random(0, 1) * 6) + 1;
   changeDice(diceRoll);
-  console.log(diceRoll);
 }
 
+// Changes the dice image and handle scores and rolls of 1
+// Called by rollDice()
 function changeDice(diceRoll) {
   switch (diceRoll) {
     case 1:
@@ -67,66 +208,15 @@ function changeDice(diceRoll) {
   }
 }
 
+// Calculates the new current score based on the dice roll
+// Called by changeDice()
 function calcScore(diceRoll) {
   let newScore = Number(activeCurrentScore.textContent) + diceRoll;
   activeCurrentScore.textContent = newScore;
 }
 
-function changeActivePlayer() {
-  document.querySelector('.btn--roll').removeEventListener('click', rollDice);
-  document.querySelector('.btn--hold').removeEventListener('click', buttonHold);
-  if (player1.classList.contains('player--active')) {
-    displayMessage(`Player 2's turn!`, 1000);
-    player1.classList.remove('player--active');
-    player2.classList.add('player--active');
-  } else {
-    displayMessage(`Player 1's turn!`, 1000);
-    player2.classList.remove('player--active');
-    player1.classList.add('player--active');
-  }
-  activeTotalScore = document.querySelector('.player--active .score');
-  activeCurrentScore = document.querySelector('.player--active .current-score');
-  document.querySelector('.btn--roll').addEventListener('click', rollDice);
-  document.querySelector('.btn--hold').addEventListener('click', buttonHold);
-  chain = 0;
-}
-
-function gameStart() {
-  const coinToss = Math.trunc(Math.random(0, 1) * 2) + 1;
-  let tossResult;
-  displayMessage(`Tossing a coin...`, 0);
-  console.log(`Tossing a coin...`);
-  if (coinToss === 1) {
-    tossResult = 'heads';
-    displayMessage(`The result was ${tossResult}!`, 2000);
-    displayMessage(`Player 1 goes first!`, 3000);
-    addListeners();
-  }
-  if (coinToss === 2) {
-    tossResult = 'tails';
-    displayMessage(`The result was ${tossResult}!`, 2000);
-    displayMessage(`Player 2 goes first!`, 3000);
-    setTimeout(() => {
-      changeActivePlayer();
-      addListeners();
-    }, 3000);
-  }
-}
-
-function buttonHold() {
-  displayMessage(`You bank your score!`, 0);
-  console.log(`You hold!`);
-  let newScore =
-    Number(activeTotalScore.textContent) +
-    Number(activeCurrentScore.textContent);
-  activeTotalScore.textContent = newScore;
-  activeCurrentScore.textContent = 0;
-  let moveOn = checkWinner();
-  if (moveOn) {
-    changeActivePlayer();
-  }
-}
-
+// Checks to see if a player has a winning score and handles a win
+// Called by buttonHold()
 function checkWinner() {
   if (activeTotalScore.textContent >= 100) {
     let player;
@@ -142,28 +232,19 @@ function checkWinner() {
       1000
     );
     displayMessage(`Congratulations!`, 3000);
-    console.log(
-      `${player} is the winner with a score of ${activeTotalScore.textContent}! Congratulations!`
-    );
-    document.querySelector('.btn--roll').removeEventListener('click', rollDice);
-    document
-      .querySelector('.btn--hold')
-      .removeEventListener('click', buttonHold);
+    rollBtn.removeEventListener('click', rollDice);
+    holdBtn.removeEventListener('click', buttonHold);
     return false;
   }
   return true;
 }
 
-function displayMessage(message, delay) {
-  setTimeout(() => {
-    messageBox.textContent = message;
-  }, delay);
-}
+// NOTES
 
-function addListeners() {
-  document.querySelector('.btn--roll').addEventListener('click', rollDice);
-  document.querySelector('.btn--hold').addEventListener('click', buttonHold);
-  document.querySelector('.btn--new').addEventListener('click', () => {
-    location.reload();
-  });
-}
+// To help us plan out the program flow of a project, we could draw a diagram, a free resource to do this on is 'diagrams.net'
+
+// In addition to querySelector, we can also use the getElementById method on the document to get an element from its ID. This operates more quickly than querySelector but is much less commonly used. You specify the name of the ID without a # in the parentheses e.g.
+
+// document.getElementById('score--1');
+
+// This is most useful when the website has to select and apply things to hundreds of different elements and time can be of the essence.

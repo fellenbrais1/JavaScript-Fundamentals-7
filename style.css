@@ -126,7 +126,7 @@ main {
 .message {
   position: absolute;
   left: 50%;
-  top: 30rem;
+  top: 31rem;
   transform: translateX(-50%);
   color: #444;
   background: none;
@@ -134,7 +134,6 @@ main {
   font-family: inherit;
   font-size: 1.8rem;
   text-transform: uppercase;
-  cursor: pointer;
   font-weight: 400;
   transition: all 0.2s;
 
@@ -163,13 +162,17 @@ main {
   top: 46.1rem;
 }
 
+.hovered {
+  outline: 2px solid #c7365f;
+}
+
+.nohover {
+  outline: none;
+}
+
 .btn:active {
   transform: translate(-50%, 3px);
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
-}
-
-.btn:focus {
-  outline: none;
 }
 
 .dice {
