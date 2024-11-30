@@ -215,6 +215,9 @@ function calcScore(diceRoll) {
 function checkWinner() {
   if (activeTotalScore.textContent >= 100) {
     let player;
+    rollBtn.style.cursor = 'default';
+    holdBtn.style.cursor = 'default';
+    toggleHover();
     if (player1.classList.contains('player--active')) {
       player1.classList.add('player--winner');
       player = 'player 1';
@@ -229,6 +232,9 @@ function checkWinner() {
     setTimeout(() => {
       playSound('win');
     }, 2000);
+    setTimeout(() => {
+      diceImage.src = 'img/pig.png';
+    }, 2500);
     displayMessage(`Congratulations ${player}!`, 3000);
     rollBtn.removeEventListener('click', rollDice);
     holdBtn.removeEventListener('click', buttonHold);
@@ -248,3 +254,11 @@ function checkWinner() {
 // This is most useful when the website has to select and apply things to hundreds of different elements and time can be of the essence.
 
 // Remember to refactor code and that it is best to wrap repeated code into functions and then call them. Brevity is important, so instead of using a switch case to handle all possible dice rolls, we can simply test for a roll of 1, and then process all other rolls by calling the same function. We can use template literals in the arguments fed into and passed to functions to allow differences in values to be handled programmatically rather than specifically by us.
+
+// There is also a 'classList.toggle()' method which works by adding a class if it is not present, or removing it if it is present. This could be more efficient in many situations but I have not applied it to the code above as it relies on doing things as I have set up.
+
+// When using 'classList.toggle()' make sure to toggle two elements at the same time to ensure that only one of the elements holds the class at any one time, this would be very useful in our 'active--player' situation in this program.
+
+// console.log() is very useful for debugging purposes, for example, we can console log just an element or a value, to see if it is being generated in the correct way, this can help us to see if a value is being correctly calculated but not displayed properly.
+
+// Like with the previous project, we could reset all of the game's values to set it up for a new game. However, I think reloading the page is actually much simpler in this situation. In a situation where you need to stay within the same web session, such as in a session with another user, you would need to reset all the values to start up a new game, as reloading the page might not be in your best interests.
