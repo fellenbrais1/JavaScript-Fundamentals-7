@@ -25,10 +25,6 @@ let isHoverEnabled = false;
 document.querySelector('#score--1').textContent = 0;
 document.querySelector('#score--2').textContent = 0;
 
-// Initializes the game and determines who starts first
-newButtonSetUp();
-gameStart();
-
 // Sets up the behaviour of the 'new game' button's outline on hover
 // Runs automatically at the beginning of a game
 function newButtonSetUp() {
@@ -242,6 +238,11 @@ function checkWinner() {
   }
   return true;
 }
+
+// Initializes the game and determines who starts first
+// (It is best practice to put these kind of calls underneath all of the codes variable and function definitions)
+newButtonSetUp();
+gameStart();
 
 // NOTES
 
